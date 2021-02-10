@@ -6,7 +6,7 @@ SportQuery
 Documentation
 -------------
 
-...coming soon
+`moreland.dev/projects/sportquery <https://moreland.dev/projects/sportquery>`_
 
 Quick start
 -----------
