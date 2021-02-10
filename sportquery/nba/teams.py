@@ -1,14 +1,14 @@
 import re
-import requests
 
 import pandas as pd
+import requests
 
-from . import base_url, team_key
+from . import base_url, team_abbr
 
 
 def get_teams(season):
     """
-    Return list of `team_key` strings for the given season
+    Return list of `team_abbr` strings for the given season
 
     Args:
         season (int): The requested season year to pull teams for
@@ -28,10 +28,10 @@ def get_teams(season):
 
     teams_full = df.Team[df.Team != 'League Average'].tolist()
 
-    return [team_key[team_full] for team_full in teams_full]
+    return [team_abbr[team_full] for team_full in teams_full]
 
 
 if __name__ == '__main__':
 
-    teams = get_teams(2018)
+    teams = get_teams(2004)
     print(teams)

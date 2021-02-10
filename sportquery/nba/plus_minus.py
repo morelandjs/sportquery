@@ -1,35 +1,51 @@
 import re
-import requests
 
 from bs4 import BeautifulSoup
 import pandas as pd
+import requests
 from unidecode import unidecode
 
 from . import base_url
 
 
 def _unpack_plus_minus(div):
+    """
+    Function to extract the sub duration (width) and plus-minus (points)
+    from a provided div website element.
+
+    Args:
+        div (bs4.element.Tag): beautiful soup tag element
+
+    Returns:
+        int: "width" of the sub-duration element (proxy for sub duration)
+        int: net points scored (plus-minus) during the sub interval
+
+    """
     width = int(re.search(r'\d+', div.get('style')).group())
     numeric = re.search(r'[-+]?\d+', div.text)
     points = int(numeric.group()) if numeric else None
     return width, points
 
 
-def plus_minus(game_id):
+def get_plus_minus(game_id):
     """
     Plus-minus contributions at the player-minute level
+
+    Args:
+        game_id (str): unique game identifier
+
+    Returns:
+        pd.DataFrame: pandas dataframe containing player plus-minus data
 
     """
     plus_minus_url = f'{base_url}/boxscores/plus-minus/{game_id}.html'
 
     r = requests.get(plus_minus_url)
 
-    page = re.sub('(<!--)|(-->)', '', r.text, flags=re.DOTALL)
-
-    soup = BeautifulSoup(page, 'html.parser')
+    soup = BeautifulSoup(r.text, 'html.parser')
 
     all_players = [
-        unidecode(re.search(r'(?:(?!\().)*', div.text).group()).strip()
+        unidecode(div.select_one('span').text).strip()
         for div in soup.find_all('div', attrs={'class': 'player'})]
 
     all_intervals = [[
@@ -59,4 +75,4 @@ def plus_minus(game_id):
 
 
 if __name__ == '__main__':
-    print(plus_minus('201810210CLE').to_string())
+    print(get_plus_minus('201810210CLE').to_string())

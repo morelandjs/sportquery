@@ -1,8 +1,8 @@
 import re
-import requests
 
 import numpy as np
 import pandas as pd
+import requests
 
 from . import base_url, team_abbr
 
@@ -11,6 +11,14 @@ def get_schedule(team, season):
     """
     Return the game schedule of the specified `team` and `season`
     as a pandas dataframe.
+
+    Args:
+        team (str): NFL team abbreviation
+        season (int): NFL season number (according to regular season)
+
+    Returns:
+        pd.DataFrame: pandas dataframe containing all team games for the
+            specified season
 
     """
     schedule_url = f'{base_url}/teams/{team}/{season}_games.html'
@@ -54,18 +62,14 @@ def get_schedule(team, season):
     df['is_home'] = df.is_home.replace({
         '@': False, pd.NA: True})
 
-    df['streak'] = df.streak.str.replace(
-        'L ', '-'
-    ).str.replace(
-        'W ', ''
-    ).astype(int)
+    df['streak'] = df.streak.str.replace('L ', '-').str.replace('W ', '')
 
     df['opponent'] = df.opponent.replace(team_abbr)
 
     team_home = np.where(df.is_home, df.team, df.opponent)
 
     game_id = df.date.astype(str).str.replace('-', '') + '0' + team_home
-    df.insert(1, 'game_id', game_id)
+    df.insert(0, 'game_id', game_id)
 
     df.drop(columns=['date', 'time'], inplace=True)
 
@@ -73,4 +77,4 @@ def get_schedule(team, season):
 
 
 if __name__ == '__main__':
-    print(get_schedule('NOP', 2018))
+    print(get_schedule('BRK', 2021))
