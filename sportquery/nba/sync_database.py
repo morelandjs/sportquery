@@ -25,7 +25,7 @@ def initialize_database():
 
     metadata = sqlalchemy.MetaData()
 
-    schedule = sqlalchemy.Table(
+    sqlalchemy.Table(
         'schedule', metadata,
         sqlalchemy.Column('game_id', sqlalchemy.types.Text),
         sqlalchemy.Column('season', sqlalchemy.types.Integer),
@@ -42,7 +42,7 @@ def initialize_database():
         sqlalchemy.Column('streak', sqlalchemy.types.Integer),
         sqlalchemy.UniqueConstraint('game_id', 'team'))
 
-    boxscore = sqlalchemy.Table(
+    sqlalchemy.Table(
         'boxscore', metadata,
         sqlalchemy.Column('game_id', sqlalchemy.types.Text),
         sqlalchemy.Column('team', sqlalchemy.types.Text),
@@ -88,7 +88,7 @@ def initialize_database():
         sqlalchemy.Column('pts_q3', sqlalchemy.types.Float),
         sqlalchemy.Column('pts_q4', sqlalchemy.types.Float))
 
-    plus_minus = sqlalchemy.Table(
+    sqlalchemy.Table(
         'plus_minus', metadata,
         sqlalchemy.Column('game_id', sqlalchemy.types.Text),
         sqlalchemy.Column('player', sqlalchemy.types.Text),
@@ -96,7 +96,7 @@ def initialize_database():
         sqlalchemy.Column('subout_minute', sqlalchemy.types.Float),
         sqlalchemy.Column('plus_minus', sqlalchemy.types.Integer))
 
-    play_by_play = sqlalchemy.Table(
+    sqlalchemy.Table(
         'play_by_play', metadata,
         sqlalchemy.Column('game_id', sqlalchemy.types.Text),
         sqlalchemy.Column('time', sqlalchemy.types.Text),
