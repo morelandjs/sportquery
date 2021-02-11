@@ -42,10 +42,10 @@ and subsequently persist it to the ``$SPORTQUERY_DB`` database connection.
 
 Generally speaking, you'll want to run this script on a schedule to ensure the
 database is up to date.
-To do this, `create a prefect account <https://universal.prefect.io/signin/register>`_
-and follow the instructions for running a
-`prefect flow <https://docs.prefect.io/orchestration/tutorial/first.html#creating-a-project>`_
-on a schedule using the prefect cloud backend.
+To do this, `register for a prefect account <https://universal.prefect.io/signin/register>`_
+and follow the instructions for
+`running a prefect flow on a schedule <https://docs.prefect.io/orchestration/tutorial/first.html#creating-a-project>`_
+using the prefect cloud backend.
 
 And that's it! The package should take care of the rest. Reference each sport's
 individual documentation page for details on the available tables and the schemas for each.
