@@ -42,14 +42,14 @@ def get_play_by_play(game_id):
     df_away.rename(columns={
         'team_away': 'event', 'points_away': 'points'}, inplace=True)
     df_away.insert(1, 'city', team_away)
-    df_away.insert(2, 'is_home', False)
+    df_away.insert(2, 'is_home', 0)
 
     # home team events
     df_home = df[['time', 'score', 'team_home', 'points_home']].copy()
     df_home.rename(columns={
         'team_home': 'event', 'points_home': 'points'}, inplace=True)
     df_home.insert(1, 'city', team_home)
-    df_home.insert(2, 'is_home', True)
+    df_home.insert(2, 'is_home', 1)
 
     # concatenate away and home team events
     df = pd.concat((df_away, df_home), axis=0).sort_index()
@@ -75,17 +75,39 @@ def get_play_by_play(game_id):
         inplace=True)
 
     # create column to track the quarter number
-    df['start_quarter'] = df.event.str.match(
-        '^Start of.*quarter$'
-    ).fillna(False)
+    df['minute'] = df.time.str.split(':').str[0].astype(int)
+    df['start_quarter'] = (
+        df.minute > df.minute.shift(1).fillna(0)).astype(int)
+    df.insert(1, 'quarter', df.start_quarter.cumsum())
 
-    df.insert(1, 'quarter', 1 + df.start_quarter.cumsum())
-    df.drop(columns=['numeric', 'start_quarter'], inplace=True)
+    # create an indicator for end of game
+    df['end_game'] = 0
+    df.loc[df.index[-1], 'end_game'] = 1
+
+    # parse game score
+    score = df.score.str.split('-')
+    df['score_away'] = score.str[0].astype(int)
+    df['score_home'] = score.str[1].astype(int)
 
     df.insert(0, 'game_id', game_id)
 
-    return df
+    df.drop(columns=['numeric', 'minute', 'score'], inplace=True)
+
+    columns = [
+        'game_id',
+        'city',
+        'is_home',
+        'quarter',
+        'start_quarter',
+        'end_game',
+        'time',
+        'score_away',
+        'score_home',
+        'points',
+        'event']
+
+    return df[columns]
 
 
 if __name__ == '__main__':
-    print(get_play_by_play('201810210CLE'))
+    print(get_play_by_play('202102090SAS').to_string())

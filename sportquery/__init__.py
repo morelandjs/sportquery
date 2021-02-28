@@ -5,5 +5,5 @@ from pathlib import Path
 
 __version__ = '0.1'
 
-workdir = Path(os.getenv('WORKDIR', '.'))
-cachedir = workdir / 'cache'
+homedir = Path(os.getenv('HOME'))
+cachedir = homedir / '.local/share/sportquery'

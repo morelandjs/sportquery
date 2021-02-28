@@ -75,4 +75,4 @@ def get_plus_minus(game_id):
 
 
 if __name__ == '__main__':
-    print(get_plus_minus('201810210CLE').to_string())
+    print(get_plus_minus('200210290LAL').to_string())

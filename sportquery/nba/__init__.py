@@ -1,3 +1,10 @@
+import sqlalchemy
+
+from .. import cachedir
+
+db_path = cachedir / 'nba.db'
+db_path.parent.mkdir(parents=True, exist_ok=True)
+engine = sqlalchemy.create_engine(f'sqlite:///{db_path.expanduser()}')
 
 base_url = 'http://www.basketball-reference.com'
 

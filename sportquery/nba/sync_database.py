@@ -4,15 +4,12 @@ import prefect
 from prefect import Flow, Parameter, task
 import sqlalchemy
 
-from .. import cachedir
+from . import engine
 from .boxscore import get_boxscore
 from .play_by_play import get_play_by_play
 from .plus_minus import get_plus_minus
 from .schedule import get_schedule
 from .teams import get_teams
-
-db_path = cachedir / 'nba.db'
-db_path.parent.mkdir(parents=True, exist_ok=True)
 
 
 @task
@@ -21,8 +18,6 @@ def initialize_database():
     Establish a sqlite database engine and return a connection to the database.
 
     """
-    engine = sqlalchemy.create_engine(f'sqlite:///{db_path.expanduser()}')
-
     metadata = sqlalchemy.MetaData()
 
     sqlalchemy.Table(
@@ -99,13 +94,16 @@ def initialize_database():
     sqlalchemy.Table(
         'play_by_play', metadata,
         sqlalchemy.Column('game_id', sqlalchemy.types.Text),
-        sqlalchemy.Column('time', sqlalchemy.types.Text),
-        sqlalchemy.Column('quarter', sqlalchemy.types.Integer),
         sqlalchemy.Column('city', sqlalchemy.types.Text),
-        sqlalchemy.Column('is_home', sqlalchemy.types.Text),
-        sqlalchemy.Column('score', sqlalchemy.types.Text),
-        sqlalchemy.Column('event', sqlalchemy.types.Text),
-        sqlalchemy.Column('points', sqlalchemy.types.Integer))
+        sqlalchemy.Column('is_home', sqlalchemy.types.Integer),
+        sqlalchemy.Column('quarter', sqlalchemy.types.Integer),
+        sqlalchemy.Column('start_quarter', sqlalchemy.types.Integer),
+        sqlalchemy.Column('end_game', sqlalchemy.types.Integer),
+        sqlalchemy.Column('time', sqlalchemy.types.Text),
+        sqlalchemy.Column('score_away', sqlalchemy.types.Integer),
+        sqlalchemy.Column('score_home', sqlalchemy.types.Integer),
+        sqlalchemy.Column('points', sqlalchemy.types.Integer),
+        sqlalchemy.Column('event', sqlalchemy.types.Text))
 
     metadata.create_all(engine)
 
