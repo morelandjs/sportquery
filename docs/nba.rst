@@ -39,6 +39,8 @@ cumulative_losses (int):
   Total number of losses upto and including to this game
 streak (int);
   Total number of consecutive wins or losses upto and including this game
+phase (str):
+  Season phase (regular or post)
 
 boxscore table
 --------------
