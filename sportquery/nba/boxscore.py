@@ -157,6 +157,10 @@ def get_boxscore(game_id):
     partial_min = (elapsed.str[1].astype(float) / 60.).fillna(0)
     df_box['MP'] = whole_min + partial_min
 
+    # this field is occasionally missing
+    if "BPM" not in df_box.columns:
+        df_box.insert(38, "BPM", None)
+
     # enforce data types
     df_box = df_box[boxscore_dtypes.keys()].astype(boxscore_dtypes)
 
@@ -168,7 +172,5 @@ def get_boxscore(game_id):
 
 if __name__ == '__main__':
 
-    #df = get_boxscore('202008140TOR')
-    #print(df)
-    df = get_boxscore('201810210CLE')
+    df = get_boxscore('202105190MEM')
     print(df)

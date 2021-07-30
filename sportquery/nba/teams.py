@@ -22,7 +22,8 @@ def get_teams(season):
 
     html = re.sub('(<!--)|(-->)', '', r.text, flags=re.DOTALL)
 
-    df, = pd.read_html(html, attrs={'id': 'team-stats-base'})
+    df, = pd.read_html(html, attrs={'id': 'advanced-team'})
+    df.columns = df.columns.droplevel()
 
     df['Team'] = df.Team.str.rstrip('*')  # remove trailing asterisk
 
@@ -33,5 +34,5 @@ def get_teams(season):
 
 if __name__ == '__main__':
 
-    teams = get_teams(2004)
+    teams = get_teams(2017)
     print(teams)
